@@ -1,8 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
-
-hostName = ""
-serverPort = 8080
+import os
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -12,8 +10,11 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes("%s" % self.client_address[0], "utf-8"))
 
 if __name__ == "__main__":
+    hostName = os.environ.get('HOST_NAME', '')
+    serverPort = int(os.environ.get('SERVER_PORT', 8081))
+
     webServer = HTTPServer((hostName, serverPort), MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
+    print("External ip echo server started http://%s:%s" % (hostName, serverPort))
 
     try:
         webServer.serve_forever()
